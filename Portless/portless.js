@@ -1,3 +1,6 @@
+const PRICE_PER_KILO_AIR = 4
+const PRICE_PER_POUND_AIR = 1.81
+
 // Default values
 document.getElementById('CustomsClearance').value = 150
 document.getElementById('ImporterSecurityFilingBond').value = 150
@@ -12,9 +15,9 @@ document.getElementById('Delivery').value = 400
 document.getElementById('DetentionFee').value = 100
 document.getElementById('PrePull').value = 200
 // **** Default values for testing DELETE BEFORE LAUNCH
-document.getElementById('Width').value = 10
-document.getElementById('Height').value = 15
-document.getElementById('Length').value = 25
+document.getElementById('Width').value = 15
+document.getElementById('Height').value = 25
+document.getElementById('Length').value = 20
 document.getElementById('CostPerUnit').value = 15
 document.getElementById('UnitsPerMonth').value = 5000
 document.getElementById('Weight').value = 0.5
@@ -27,13 +30,15 @@ const calcNext3Button = document.getElementById('CalcNext3')
 const calcNext4Button = document.getElementById('CalcNext4')
 const calcSubmitMainButton = document.getElementById('CalcSubmitMain')
 // Form Fields
+const currentImportMethodElement = document.getElementsByName('CurrentMethod')
+// Vars for calculations
 let unitType,
-  weight,
+  itemWeight,
   unitsPerMonth,
   costPerUnit,
-  width,
-  height,
-  length,
+  itemWidth,
+  itemHeight,
+  itemLength,
   containerSize,
   containerUtilization,
   costPerContainerOcean,
@@ -61,18 +66,19 @@ let unitType,
   hazmat,
   delivery,
   detentionFee,
-  prePull
+  prePull,
+  currentImportMethod
 
 calcSubmitMainButton.addEventListener('click', function (e) {
   e.preventDefault
 
   unitType = document.getElementById('UnitType').value
-  weight = document.getElementById('Weight').value
+  itemWeight = document.getElementById('Weight').value
   unitsPerMonth = document.getElementById('UnitsPerMonth').value
   costPerUnit = document.getElementById('CostPerUnit').value
-  width = document.getElementById('Width').value
-  height = document.getElementById('Height').value
-  length = document.getElementById('Length').value
+  itemWidth = document.getElementById('Width').value
+  itemHeight = document.getElementById('Height').value
+  itemLength = document.getElementById('Length').value
   containerSize = document.getElementById('ContainerSize').value
   costPerContainerOcean = document.getElementById('CostPerContainerOcean').value
   averageImportDutiesRateOcean = document.getElementById(
@@ -113,6 +119,14 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   delivery = document.getElementById('Delivery').value
   detentionFee = document.getElementById('DetentionFee').value
   prePull = document.getElementById('PrePull').value
+  // currentImportMethod Radios
+  for (let i = 0, length = currentImportMethodElement.length; i < length; i++) {
+    if (currentImportMethodElement[i].checked) {
+      currentImportMethod = currentImportMethodElement[i].value
+      break
+    }
+  }
+
   // *** CALCULATIONS ***
   if (apr > 0) {
     inventoryFinancingCost =
@@ -127,8 +141,13 @@ calcSubmitMainButton.addEventListener('click', function (e) {
     containerUtilization = 100
   }
 
-  const itemVolume = calculateItemVolume(width, height, length, unitType)
-  const maxUnitsPerContainer = calculateMaxUnits(
+  const itemVolume = calculateItemVolume(
+    itemLength,
+    itemWidth,
+    itemHeight,
+    unitType
+  )
+  const maxUnitsPerContainer = calculateMaxUnitsPerContainer(
     itemVolume,
     containerSize,
     unitType,
@@ -166,39 +185,64 @@ calcSubmitMainButton.addEventListener('click', function (e) {
     (costPerUnit * unitsPerMonth * (overstockClearanceItems / 100)) /
     unitsPerMonth
 
-  let totalPrice =
+  let totalPrice
+  //  Common COSTS
+  totalPrice =
     parseFloat(inventoryFinancingCost) +
-    parseFloat(oceanFreight) +
-    parseFloat(customsClearanceCalculated) +
-    parseFloat(importerSecurityFilingBondCalculated) +
-    parseFloat(handlingFeeCalculated) +
-    parseFloat(drayageCalculated) +
-    parseFloat(chassisCalculated) +
-    parseFloat(congestionFeeCalculated) +
-    parseFloat(securitySurchargeCalculated) +
-    parseFloat(inlandFuelSurchargeCalculated) +
-    parseFloat(hazmatCalculated) +
-    parseFloat(deliveryCalculated) +
-    parseFloat(detentionFeeCalculated) +
-    parseFloat(prePullCalculated) +
     parseFloat(customsTarifRate) +
     parseFloat(monthlyAccountFee) +
     parseFloat(receivingInboundFee) +
     parseFloat(storageWarehouseFee) +
     parseFloat(pickPackPerOrder) +
     parseFloat(materiialsFeePerOrder) +
-    parseFloat(averageShippingCostPerOrder) +
-    parseFloat(overstockCost)
+    parseFloat(averageShippingCostPerOrder)
 
-  // console.log('costPerUnit: ' + costPerUnit)
-  // console.log('apr: ' + apr)
-  // console.log('daysUntilPayment: ' + daysUntilPayment / 365)
-  // console.log('Inventory Financing Cost: ' + inventoryFinancingCost)
+  // Air Freight COSTS
+
+  if (currentImportMethod === 'AirFreight') {
+    let pricePerWeightUnit
+    if (unitType === 'imperial') {
+      pricePerWeightUnit = PRICE_PER_POUND_AIR
+    } else {
+      pricePerWeightUnit = PRICE_PER_KILO_AIR
+    }
+    let airFreightCalculated = pricePerWeightUnit * itemWeight
+    totalPrice = totalPrice + airFreightCalculated
+  }
+
+  // LCL COSTS
+  if (currentImportMethod === 'OceanFreight') {
+    totalPrice =
+      totalPrice +
+      parseFloat(oceanFreight) +
+      parseFloat(customsClearanceCalculated) +
+      parseFloat(importerSecurityFilingBondCalculated) +
+      parseFloat(handlingFeeCalculated) +
+      parseFloat(drayageCalculated) +
+      parseFloat(chassisCalculated) +
+      parseFloat(congestionFeeCalculated) +
+      parseFloat(securitySurchargeCalculated) +
+      parseFloat(inlandFuelSurchargeCalculated) +
+      parseFloat(hazmatCalculated) +
+      parseFloat(deliveryCalculated) +
+      parseFloat(detentionFeeCalculated) +
+      parseFloat(prePullCalculated)
+  }
+
+  // 20FT and 40FT COSTS
+  if (
+    currentImportMethod === 'OceanFreight' &&
+    (containerSize === '20FT' || containerSize === '40FT')
+  ) {
+    totalPrice = totalPrice + parseFloat(overstockCost)
+  }
+
+  totalPrice = roundToTwoDecimalPlaces(totalPrice)
 
   console.log('====================================')
 
   console.log('inventoryFinancingCost: ' + inventoryFinancingCost)
-  console.log('calculateMaxUnits: ' + maxUnitsPerContainer)
+  console.log('calculateMaxUnitsPerContainer: ' + maxUnitsPerContainer)
   console.log('oceanFreight: ' + oceanFreight)
   console.log('customsClearanceCalculated: ' + customsClearanceCalculated)
   console.log(
@@ -226,14 +270,16 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   console.log('overstockCost: ' + overstockCost)
   console.log('====================================')
   console.log('Total Price: ' + totalPrice)
+  console.log('====================================')
+  console.log('currentImportMethodElement: ' + currentImportMethod)
 })
 
 /*
 
 Ocean/Air: 
-Current method
--Ocean Freight
--Air Freight
+CurrentMethod
+-OceanFreight
+-AirFreight
 
 ocean-group
 calc-green-box_ocean-group
@@ -258,7 +304,7 @@ function calculateItemVolume(
   }
 }
 
-function calculateMaxUnits(
+function calculateMaxUnitsPerContainer(
   itemVolume,
   containerType,
   measuringUnit = 'imperial',
@@ -275,7 +321,8 @@ function calculateMaxUnits(
   const maxUnits =
     (containerVolume / itemVolume) * (utilizationPercentage / 100)
 
-  return Math.round(maxUnits)
+  // return Math.round(maxUnits)
+  return maxUnits
 }
 
 function calculateItemsPerPallet(
@@ -288,4 +335,8 @@ function calculateItemsPerPallet(
   } else {
     return (65.824721 * 0.0283168 * (palletUtilization / 100)) / itemVolume
   }
+}
+
+function roundToTwoDecimalPlaces(num) {
+  return Math.round((num + Number.EPSILON) * 100) / 100
 }
