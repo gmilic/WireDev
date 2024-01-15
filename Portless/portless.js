@@ -1,5 +1,31 @@
 const PRICE_PER_KILO_AIR = 4
 const PRICE_PER_POUND_AIR = 1.81
+// Sections
+const step00 = document.getElementById('calc-step-00')
+const step01 = document.getElementById('calc-step-01')
+const step02 = document.getElementById('calc-step-02')
+const step03 = document.getElementById('calc-step-03')
+const step04 = document.getElementById('calc-step-04')
+const step05 = document.getElementById('calc-step-05')
+
+step01.classList.add('hidden-section')
+step02.classList.add('hidden-section')
+step03.classList.add('hidden-section')
+step04.classList.add('hidden-section')
+step05.classList.add('hidden-section')
+// Buttons
+const calcStartButton = document.getElementById('CalcStart')
+const calcNext1Button = document.getElementById('CalcNext1')
+const calcNext2Button = document.getElementById('CalcNext2')
+const calcNext3Button = document.getElementById('CalcNext3')
+const calcNext4Button = document.getElementById('CalcNext4')
+const calcSubmitMainButton = document.getElementById('CalcSubmitMain')
+
+calcStartButton.addEventListener('click', function (e) {
+  e.preventDefault
+  step00.classList.add('hidden-section')
+  step01.classList.remove('hidden-section')
+})
 
 // Default values
 document.getElementById('CustomsClearance').value = 150
@@ -22,13 +48,6 @@ document.getElementById('CostPerUnit').value = 15
 document.getElementById('UnitsPerMonth').value = 5000
 document.getElementById('Weight').value = 0.5
 
-// Buttons
-const calcStartButton = document.getElementById('CalcStart')
-const calcNext1Button = document.getElementById('CalcNext1')
-const calcNext2Button = document.getElementById('CalcNext2')
-const calcNext3Button = document.getElementById('CalcNext3')
-const calcNext4Button = document.getElementById('CalcNext4')
-const calcSubmitMainButton = document.getElementById('CalcSubmitMain')
 // Form Fields
 const currentImportMethodElement = document.getElementsByName('CurrentMethod')
 // Vars for calculations
@@ -238,6 +257,12 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   }
 
   totalPrice = roundToTwoDecimalPlaces(totalPrice)
+  document.getElementById('CalculatedPrice').value = totalPrice
+  // write total price in sesion storage
+  sessionStorage.setItem('totalPrice', totalPrice)
+
+  //redirect to results page
+  window.location.href = '/calc/result'
 
   console.log('====================================')
 
