@@ -25,6 +25,36 @@ calcStartButton.addEventListener('click', function (e) {
   e.preventDefault
   step00.classList.add('hidden-section')
   step01.classList.remove('hidden-section')
+  step01.classList.add('show-section')
+  window.scrollTo(0, 0)
+})
+calcNext1Button.addEventListener('click', function (e) {
+  e.preventDefault
+  step01.classList.add('hidden-section')
+  step02.classList.remove('hidden-section')
+  step02.classList.add('show-section')
+  window.scrollTo(0, 0)
+})
+calcNext2Button.addEventListener('click', function (e) {
+  e.preventDefault
+  step02.classList.add('hidden-section')
+  step03.classList.remove('hidden-section')
+  step03.classList.add('show-section')
+  window.scrollTo(0, 0)
+})
+calcNext3Button.addEventListener('click', function (e) {
+  e.preventDefault
+  step03.classList.add('hidden-section')
+  step04.classList.remove('hidden-section')
+  step04.classList.add('show-section')
+  window.scrollTo(0, 0)
+})
+calcNext4Button.addEventListener('click', function (e) {
+  e.preventDefault
+  step04.classList.add('hidden-section')
+  step05.classList.remove('hidden-section')
+  step05.classList.add('show-section')
+  window.scrollTo(0, 0)
 })
 
 // Default values
