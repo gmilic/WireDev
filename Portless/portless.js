@@ -78,8 +78,41 @@ document.getElementById('CostPerUnit').value = 15
 document.getElementById('UnitsPerMonth').value = 5000
 document.getElementById('Weight').value = 0.5
 
-// Form Fields
+// Radio buttons
 const currentImportMethodElement = document.getElementsByName('CurrentMethod')
+for (let i = 0, length = currentImportMethodElement.length; i < length; i++) {
+  currentImportMethodElement[i].addEventListener('click', function (e) {
+    if (document.getElementById('OceanFreight').checked) {
+      document.getElementById('ocean-group').style.display = 'block'
+      document.getElementById('calc-green-box_ocean-group').style.display =
+        'block'
+      document.getElementById('airFreight-group').style.display = 'none'
+    } else {
+      document.getElementById('ocean-group').style.display = 'none'
+      document.getElementById('calc-green-box_ocean-group').style.display =
+        'none'
+      document.getElementById('airFreight-group').style.display = 'block'
+    }
+  })
+}
+// container sizes defaults
+containerSizeElement = document.getElementById('ContainerSize')
+costPerContainerHiddenElement = document.getElementById('CostPerContainerOcean')
+containerSizeElement.addEventListener('change', function (e) {
+  let evt = document.createEvent('HTMLEvents')
+  evt.initEvent('change', false, true)
+  if (containerSizeElement.value === 'LCL') {
+    costPerContainerHiddenElement.value = 2000
+    costPerContainerHiddenElement.dispatchEvent(evt)
+  } else if (containerSizeElement.value === '20FT') {
+    costPerContainerHiddenElement.value = 3000
+    costPerContainerHiddenElement.dispatchEvent(evt)
+  } else if (containerSizeElement.value === '40FT') {
+    costPerContainerHiddenElement.value = 4000
+    costPerContainerHiddenElement.dispatchEvent(evt)
+  }
+})
+
 // Vars for calculations
 let unitType,
   itemWeight,
@@ -328,23 +361,6 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   console.log('====================================')
   console.log('currentImportMethodElement: ' + currentImportMethod)
 })
-
-/*
-
-Ocean/Air: 
-CurrentMethod
--OceanFreight
--AirFreight
-
-ocean-group
-calc-green-box_ocean-group
-airFreight-group
-
-
-GreenBox:
-AverageCustomsRateWrap
-
-*/
 
 function calculateItemVolume(
   length,
