@@ -1,5 +1,7 @@
+// CONSTS
 const PRICE_PER_KILO_AIR = 4
 const PRICE_PER_POUND_AIR = 1.81
+document.getElementById('airFreight-group').style.display = 'none'
 // Sections
 const step00 = document.getElementById('calc-step-00')
 const step01 = document.getElementById('calc-step-01')
@@ -7,12 +9,12 @@ const step02 = document.getElementById('calc-step-02')
 const step03 = document.getElementById('calc-step-03')
 const step04 = document.getElementById('calc-step-04')
 const step05 = document.getElementById('calc-step-05')
-
-step01.classList.add('hidden-section')
-step02.classList.add('hidden-section')
-step03.classList.add('hidden-section')
-step04.classList.add('hidden-section')
-step05.classList.add('hidden-section')
+// hide sections
+// step01.classList.add('hidden-section')
+// step02.classList.add('hidden-section')
+// step03.classList.add('hidden-section')
+// step04.classList.add('hidden-section')
+// step05.classList.add('hidden-section')
 // Buttons
 const calcStartButton = document.getElementById('CalcStart')
 const calcNext1Button = document.getElementById('CalcNext1')
@@ -71,12 +73,16 @@ document.getElementById('Delivery').value = 400
 document.getElementById('DetentionFee').value = 100
 document.getElementById('PrePull').value = 200
 // **** Default values for testing DELETE BEFORE LAUNCH
+document.getElementById('CostPerUnit').value = 15
+document.getElementById('UnitsPerMonth').value = 5000
 document.getElementById('Width').value = 15
 document.getElementById('Height').value = 25
 document.getElementById('Length').value = 20
-document.getElementById('CostPerUnit').value = 15
-document.getElementById('UnitsPerMonth').value = 5000
 document.getElementById('Weight').value = 0.5
+// document.getElementById('Width').value = 38.1
+// document.getElementById('Height').value = 63.5
+// document.getElementById('Length').value = 50.8
+// document.getElementById('Weight').value = 0.226796
 
 // Radio buttons
 const currentImportMethodElement = document.getElementsByName('CurrentMethod')
@@ -162,30 +168,68 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   itemHeight = document.getElementById('Height').value
   itemLength = document.getElementById('Length').value
   containerSize = document.getElementById('ContainerSize').value
+
   costPerContainerOcean = document.getElementById('CostPerContainerOcean').value
+  if (costPerContainerOcean == 0) {
+    costPerContainerOcean = 0.000000001
+  }
   averageImportDutiesRateOcean = document.getElementById(
     'AverageImportDutiesRateOcean'
   ).value
+  if (averageImportDutiesRateOcean == 0) {
+    averageImportDutiesRateOcean = 0.000000001
+  }
   averageCostPerKiloAir = document.getElementById('AverageCostPerKiloAir').value
+  if (averageCostPerKiloAir == 0) {
+    averageCostPerKiloAir = 0.000000001
+  }
   averageImportDutiesRateAir = document.getElementById(
     'AverageImportDutiesRateAir'
   ).value
+  if (averageImportDutiesRateAir == 0) {
+    averageImportDutiesRateAir = 0.000000001
+  }
   threePLMonthlyFee = document.getElementById('3PLMonthlyFee').value
+  if (threePLMonthlyFee == 0) {
+    threePLMonthlyFee = 0.000000001
+  }
   receivingInboundFeePerPallet = document.getElementById(
     'ReceivingInboundFeePerPallet'
   ).value
+  if (receivingInboundFeePerPallet == 0) {
+    receivingInboundFeePerPallet = 0.000000001
+  }
   storageWarehouseFeePerCubicFoot = document.getElementById(
     'StorageWarehouseFeePerCubicFoot'
   ).value
+  if (storageWarehouseFeePerCubicFoot == 0) {
+    storageWarehouseFeePerCubicFoot = 0.000000001
+  }
   pickPackPerOrder = document.getElementById('PickPackPerOrder').value
+  if (pickPackPerOrder == 0) {
+    pickPackPerOrder = 0.000000001
+  }
   materiialsFeePerOrder = document.getElementById('MateriialsFeePerOrder').value
+  if (materiialsFeePerOrder == 0) {
+    materiialsFeePerOrder = 0.000000001
+  }
   averageShippingCostPerOrder = document.getElementById(
     'AverageShippingCostPerOrder'
   ).value
+  if (averageShippingCostPerOrder == 0) {
+    averageShippingCostPerOrder = 0.000000001
+  }
   apr = document.getElementById('APR').value
+  if (apr == 0) {
+    apr = 0.000000001
+  }
   overstockClearanceItems = document.getElementById(
     'OverstockClearanceItems'
   ).value
+  if (overstockClearanceItems == 0) {
+    overstockClearanceItems = 0.000000001
+  }
+
   daysUntilPayment = document.getElementById('DaysUntilPayment').value
   customsClearance = document.getElementById('CustomsClearance').value
   importerSecurityFilingBond = document.getElementById(
@@ -235,6 +279,7 @@ calcSubmitMainButton.addEventListener('click', function (e) {
     unitType,
     containerUtilization
   ) // 92% utilization ???????
+
   let oceanFreight = costPerContainerOcean / maxUnitsPerContainer
 
   let customsClearanceCalculated = customsClearance / maxUnitsPerContainer
@@ -259,9 +304,18 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   let receivingInboundFee =
     receivingInboundFeePerPallet / calculatedItemsPerPallet
 
-  let storageWarehouseFee =
-    (storageWarehouseFeePerCubicFoot * unitsPerMonth * itemVolume) /
-    unitsPerMonth
+  let storageWarehouseFee
+
+  if (unitType === 'imperial') {
+    storageWarehouseFee =
+      (storageWarehouseFeePerCubicFoot * unitsPerMonth * itemVolume) /
+      unitsPerMonth
+  } else if (unitType === 'metric') {
+    // 1 cu m = 35.3147 cu ft
+    storageWarehouseFee =
+      (storageWarehouseFeePerCubicFoot * 35.3147 * unitsPerMonth * itemVolume) /
+      unitsPerMonth
+  }
 
   let overstockCost =
     (costPerUnit * unitsPerMonth * (overstockClearanceItems / 100)) /
@@ -325,7 +379,7 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   sessionStorage.setItem('totalPrice', totalPrice)
 
   //redirect to results page
-  window.location.href = '/calc/result'
+  // window.location.href = '/calc/result'
 
   console.log('====================================')
 
@@ -359,7 +413,6 @@ calcSubmitMainButton.addEventListener('click', function (e) {
   console.log('====================================')
   console.log('Total Price: ' + totalPrice)
   console.log('====================================')
-  console.log('currentImportMethodElement: ' + currentImportMethod)
 })
 
 function calculateItemVolume(
@@ -371,7 +424,7 @@ function calculateItemVolume(
   if (measuringUnit === 'imperial') {
     return (length / 12) * (width / 12) * (height / 12) // Cubic feet per cubic inch
   } else {
-    return length * width * height // Cubic meters
+    return (length * width * height) / 1000000 // Cubic meters
   }
 }
 
@@ -382,18 +435,25 @@ function calculateMaxUnitsPerContainer(
   utilizationPercentage = 92
 ) {
   // Get container volume based on type
-  const containerVolume = {
+  const containerVolumeImperial = {
     '20FT': 1170.23, // Cubic feet
     '40FT': 2386.08, // Cubic feet
     LCL: 55.0 // Cubic feet
   }[containerType]
+  const containerVolumeMetric = {
+    '20FT': 33.13729629, // Cubic meters
+    '40FT': 67.56615014, // Cubic meters
+    LCL: 1.557424 // Cubic meters
+  }[containerType]
 
   // Calculate the maximum number of units that can fit
-  const maxUnits =
-    (containerVolume / itemVolume) * (utilizationPercentage / 100)
-
-  // return Math.round(maxUnits)
-  return maxUnits
+  if (measuringUnit === 'imperial') {
+    return (
+      (containerVolumeImperial / itemVolume) * (utilizationPercentage / 100)
+    )
+  } else {
+    return (containerVolumeMetric / itemVolume) * (utilizationPercentage / 100)
+  }
 }
 
 function calculateItemsPerPallet(
