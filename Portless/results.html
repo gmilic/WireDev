@@ -1,8 +1,51 @@
+<style>
+  td {
+    padding: 4px;
+    min-width: 250px;
+    border-bottom: 1px solid grey;
+  }
+</style>
 <script>
   // write totalPrice value from sesion storage to element with id calculated-cost
   document.getElementById('calculated-cost').innerHTML =
     sessionStorage.getItem('totalPrice')
-  // get itemData from session storage
-  let itemData = JSON.parse(sessionStorage.getItem('itemData'))
-  console.log(itemData)
+  // **************** DOM ELEMENTS ****************
+  const calcDetailsWrap = document.getElementById('calc_details-wrap')
+
+  // **************** INPUT DATA ****************
+  const totalPrice = sessionStorage.getItem('totalPrice')
+  let dataInputs = JSON.parse(sessionStorage.getItem('dataInputs'))
+  console.log(dataInputs)
+  let dataCalculations = JSON.parse(sessionStorage.getItem('dataCalculations'))
+  console.log(dataCalculations)
+  // **************** DISPLAY DATA ****************
+  let calcDetails = `
+  <table>
+  <tr><td>Ocean Freight (Container Cost)</td><td> ${dataCalculations.oceanFreight}</td></tr>
+  <tr><td>Air Freight</td><td> ${dataCalculations.airFreightCalculated}</td></tr>
+  <tr><td>Importer Security Filing & Bond</td><td> ${dataCalculations.importerSecurityFilingBondCalculated}</td></tr>
+  <tr><td>Handling Fee</td><td> ${dataCalculations.handlingFeeCalculated}</td></tr>
+  <tr><td>Drayage</td><td> ${dataCalculations.drayageCalculated}</td></tr>
+  <tr><td>Chassis</td><td> ${dataCalculations.chassisCalculated}</td></tr>
+  <tr><td>Congestion Fee</td><td> ${dataCalculations.congestionFeeCalculated}</td></tr>
+  <tr><td>Security Surcharge</td><td> ${dataCalculations.securitySurchargeCalculated}</td></tr>
+  <tr><td>Inland Fuel Surcharge</td><td> ${dataCalculations.inlandFuelSurchargeCalculated}</td></tr>
+  <tr><td>Hazmat</td><td> ${dataCalculations.hazmatCalculated}</td></tr>
+  <tr><td>Delivery</td><td> ${dataCalculations.deliveryCalculated}</td></tr>
+  <tr><td>Detention Fee</td><td> ${dataCalculations.detentionFeeCalculated}</td></tr>
+  <tr><td>Pre-Pull</td><td> ${dataCalculations.prePullCalculated}</td></tr>
+  <tr><td>Customs / Tariff Rate</td><td> ${dataCalculations.customsTarifRate}</td></tr>
+  <tr><td>Custom Clearance</td><td> ${dataCalculations.customsClearanceCalculated}</td></tr>
+  <tr><td>Monthly Account Fee</td><td> ${dataCalculations.monthlyAccountFee}</td></tr>
+  <tr><td>Receiving / Inbound Fee</td><td> ${dataCalculations.receivingInboundFee}</td></tr>
+  <tr><td>Storage / Warehousing Fee</td><td> ${dataCalculations.storageWarehouseFee}</td></tr>
+  <tr><td>Pick & Pack Fee</td><td> ${dataCalculations.pickPackPerOrder}</td></tr>
+  <tr><td>Material Fees</td><td> ${dataCalculations.materiialsFeePerOrder}</td></tr>
+  <tr><td>Shipping Cost</td><td> ${dataCalculations.averageShippingCostPerOrder}</td></tr>
+  <tr><td>Inventory Financing Cost</td><td> ${dataCalculations.inventoryFinancingCost}</td></tr>
+  <tr><td>Overstock Cost</td><td> ${dataCalculations.overstockCost}</td></tr>
+  <tr><td><strong>Total Price / Order</strong></td><td><strong> ${totalPrice}</strong></td></tr>
+  </table>
+  `
+  calcDetailsWrap.innerHTML = calcDetails
 </script>

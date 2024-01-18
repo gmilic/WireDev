@@ -166,7 +166,8 @@
     delivery,
     detentionFee,
     prePull,
-    currentImportMethod
+    currentImportMethod,
+    airFreightCalculated = 0
 
   calcSubmitMainButton.addEventListener('click', function (e) {
     e.preventDefault
@@ -367,7 +368,7 @@
       } else {
         pricePerWeightUnit = PRICE_PER_KILO_AIR
       }
-      let airFreightCalculated = pricePerWeightUnit * itemWeight
+      airFreightCalculated = pricePerWeightUnit * itemWeight
       totalPrice = totalPrice + airFreightCalculated
     }
 
@@ -410,11 +411,39 @@
       costPerUnit: costPerUnit,
       itemWidth: itemWidth,
       itemHeight: itemHeight,
-      itemLength: itemLength
+      itemLength: itemLength,
+      currentImportMethod: currentImportMethod,
+      containerSize: containerSize
     }
     sessionStorage.setItem('dataInputs', JSON.stringify(dataInputs))
 
-    let dataCalculations = {}
+    let dataCalculations = {
+      oceanFreight: oceanFreight,
+      airFreightCalculated: airFreightCalculated,
+      importerSecurityFilingBondCalculated:
+        importerSecurityFilingBondCalculated,
+      handlingFeeCalculated: handlingFeeCalculated,
+      drayageCalculated: drayageCalculated,
+      chassisCalculated: chassisCalculated,
+      congestionFeeCalculated: congestionFeeCalculated,
+      securitySurchargeCalculated: securitySurchargeCalculated,
+      inlandFuelSurchargeCalculated: inlandFuelSurchargeCalculated,
+      hazmatCalculated: hazmatCalculated,
+      deliveryCalculated: deliveryCalculated,
+      detentionFeeCalculated: detentionFeeCalculated,
+      prePullCalculated: prePullCalculated,
+      customsTarifRate: customsTarifRate,
+      customsClearanceCalculated: customsClearanceCalculated,
+      monthlyAccountFee: monthlyAccountFee,
+      receivingInboundFee: receivingInboundFee,
+      storageWarehouseFee: storageWarehouseFee,
+      pickPackPerOrder: pickPackPerOrder,
+      materiialsFeePerOrder: materiialsFeePerOrder,
+      averageShippingCostPerOrder: averageShippingCostPerOrder,
+      inventoryFinancingCost: inventoryFinancingCost,
+      overstockCost: overstockCost
+    }
+    sessionStorage.setItem('dataCalculations', JSON.stringify(dataCalculations))
 
     // write total price in sesion storage
     sessionStorage.setItem('totalPrice', totalPrice)
@@ -451,12 +480,13 @@
     console.log('materiialsFeePerOrder: ' + materiialsFeePerOrder)
     console.log('averageShippingCostPerOrder: ' + averageShippingCostPerOrder)
     console.log('overstockCost: ' + overstockCost)
+    console.log('airFreightCalculated: ' + airFreightCalculated)
     console.log('====================================')
     console.log('Total Price: ' + totalPrice)
     console.log('====================================')
 
     // **************** redirect to results page ****************
-    window.location.href = '/calc/result'
+    // window.location.href = '/calc/result'
   })
 
   function calculateItemVolume(
