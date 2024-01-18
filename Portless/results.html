@@ -1,0 +1,8 @@
+<script>
+  // write totalPrice value from sesion storage to element with id calculated-cost
+  document.getElementById('calculated-cost').innerHTML =
+    sessionStorage.getItem('totalPrice')
+  // get itemData from session storage
+  let itemData = JSON.parse(sessionStorage.getItem('itemData'))
+  console.log(itemData)
+</script>

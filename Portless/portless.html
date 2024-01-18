@@ -1,22 +1,28 @@
 <script>
-  // CONSTS
+  // **************** CONSTS ***************
   const PRICE_PER_KILO_AIR = 4
   const PRICE_PER_POUND_AIR = 1.81
+  const CONTAINER_20FOOT_UTILIZATION = 82
+  const CONTAINER_40FOOT_UTILIZATION = 80.1
+  const PALLET_UTILIZATION = 79
   document.getElementById('airFreight-group').style.display = 'none'
-  // Sections
+
+  // **************** Sections ***************
   const step00 = document.getElementById('calc-step-00')
   const step01 = document.getElementById('calc-step-01')
   const step02 = document.getElementById('calc-step-02')
   const step03 = document.getElementById('calc-step-03')
   const step04 = document.getElementById('calc-step-04')
   const step05 = document.getElementById('calc-step-05')
-  // hide sections
+
+  // **************** hide sections ***************
   step01.classList.add('hidden-section')
   step02.classList.add('hidden-section')
   step03.classList.add('hidden-section')
   step04.classList.add('hidden-section')
   step05.classList.add('hidden-section')
-  // Buttons
+
+  // **************** Buttonss ***************
   const calcStartButton = document.getElementById('CalcStart')
   const calcNext1Button = document.getElementById('CalcNext1')
   const calcNext2Button = document.getElementById('CalcNext2')
@@ -60,7 +66,7 @@
     window.scrollTo(0, 0)
   })
 
-  // Default values
+  // **************** Default values ***************
   document.getElementById('CustomsClearance').value = 150
   document.getElementById('ImporterSecurityFilingBond').value = 150
   document.getElementById('HandlingFee').value = 150
@@ -73,7 +79,8 @@
   document.getElementById('Delivery').value = 400
   document.getElementById('DetentionFee').value = 100
   document.getElementById('PrePull').value = 200
-  // **** Default values for testing DELETE BEFORE LAUNCH
+
+  // **************** Default values for testing DELETE BEFORE LAUNCH ***************
   document.getElementById('CostPerUnit').value = 15
   document.getElementById('UnitsPerMonth').value = 5000
   document.getElementById('Width').value = 15
@@ -85,7 +92,7 @@
   // document.getElementById('Length').value = 50.8
   // document.getElementById('Weight').value = 0.226796
 
-  // Radio buttons
+  // **************** Radio buttons ***************
   const currentImportMethodElement = document.getElementsByName('CurrentMethod')
   for (let i = 0, length = currentImportMethodElement.length; i < length; i++) {
     currentImportMethodElement[i].addEventListener('click', function (e) {
@@ -102,7 +109,8 @@
       }
     })
   }
-  // container sizes defaults
+
+  // **************** container sizes defaults ****************
   containerSizeElement = document.getElementById('ContainerSize')
   costPerContainerHiddenElement = document.getElementById(
     'CostPerContainerOcean'
@@ -122,7 +130,7 @@
     }
   })
 
-  // Vars for calculations
+  // **************** Vars for calculations ****************
   let unitType,
     itemWeight,
     unitsPerMonth,
@@ -162,8 +170,9 @@
 
   calcSubmitMainButton.addEventListener('click', function (e) {
     e.preventDefault
-
+    // **************** INPUTS ****************
     unitType = document.getElementById('UnitType').value
+    itemName = document.getElementById('ProductName').value
     itemWeight = document.getElementById('Weight').value
     unitsPerMonth = document.getElementById('UnitsPerMonth').value
     costPerUnit = document.getElementById('CostPerUnit').value
@@ -266,7 +275,7 @@
       }
     }
 
-    // *** CALCULATIONS ***
+    // **************** CALCULATIONS ****************
     if (apr > 0) {
       inventoryFinancingCost =
         costPerUnit * (apr / 100) * (daysUntilPayment / 365)
@@ -339,7 +348,7 @@
       unitsPerMonth
 
     let totalPrice
-    //  Common COSTS
+    // **************** Common COSTS ****************
     totalPrice =
       parseFloat(inventoryFinancingCost) +
       parseFloat(customsTarifRate) +
@@ -350,8 +359,7 @@
       parseFloat(materiialsFeePerOrder) +
       parseFloat(averageShippingCostPerOrder)
 
-    // Air Freight COSTS
-
+    // **************** Air Freight COSTS ****************
     if (currentImportMethod === 'AirFreight') {
       let pricePerWeightUnit
       if (unitType === 'imperial') {
@@ -363,7 +371,7 @@
       totalPrice = totalPrice + airFreightCalculated
     }
 
-    // LCL COSTS
+    // **************** LCL COSTS ****************
     if (currentImportMethod === 'OceanFreight') {
       totalPrice =
         totalPrice +
@@ -382,7 +390,7 @@
         parseFloat(prePullCalculated)
     }
 
-    // 20FT and 40FT COSTS
+    // **************** 20FT and 40FT COSTS ****************
     if (
       currentImportMethod === 'OceanFreight' &&
       (containerSize === '20FT' || containerSize === '40FT')
@@ -392,12 +400,26 @@
 
     totalPrice = roundToTwoDecimalPlaces(totalPrice)
     document.getElementById('CalculatedPrice').value = totalPrice
+
+    // **************** sesion storage ****************
+    let dataInputs = {
+      itemName: itemName,
+      unitType: unitType,
+      itemWeight: itemWeight,
+      unitsPerMonth: unitsPerMonth,
+      costPerUnit: costPerUnit,
+      itemWidth: itemWidth,
+      itemHeight: itemHeight,
+      itemLength: itemLength
+    }
+    sessionStorage.setItem('dataInputs', JSON.stringify(dataInputs))
+
+    let dataCalculations = {}
+
     // write total price in sesion storage
     sessionStorage.setItem('totalPrice', totalPrice)
 
-    //redirect to results page
-    window.location.href = '/calc/result'
-
+    // **************** LOG ****************
     console.log('====================================')
 
     console.log('inventoryFinancingCost: ' + inventoryFinancingCost)
@@ -432,6 +454,9 @@
     console.log('====================================')
     console.log('Total Price: ' + totalPrice)
     console.log('====================================')
+
+    // **************** redirect to results page ****************
+    window.location.href = '/calc/result'
   })
 
   function calculateItemVolume(

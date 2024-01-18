@@ -1,0 +1,21 @@
+<div id="ajaxContent"></div>
+<script>
+  var Webflow = Webflow || []
+  Webflow.push(function () {
+    $.ajax({
+      url: 'http://127.0.0.1:5500/Portless/portless.html',
+      type: 'GET',
+      success: function (data) {
+        $('#ajaxContent').append(data)
+      },
+      error: function () {
+        $.get(
+          'https://raw.githubusercontent.com/gmilic/WireDev/main/Portless/portless.html',
+          function (data) {
+            $('#ajaxContent').append(data)
+          }
+        )
+      }
+    })
+  })
+</script>
