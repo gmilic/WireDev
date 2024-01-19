@@ -32,8 +32,7 @@
 <script>
   // **************** CONST ****************
   let curency = '$ '
-  const VOLUMETRIC_WEIGHT_RATIO_METRIC = 5000
-  const VOLUMETRIC_WEIGHT_RATIO_IMPERIAL = 305
+  const VOLUMETRIC_WEIGHT_RATIO_METRIC = 8000
 
   // **************** DOM ELEMENTS ****************
   const calcDetailsWrap = document.getElementById('calc_details-wrap')
@@ -328,8 +327,12 @@
       VOLUMETRIC_WEIGHT_RATIO_METRIC
   } else {
     volumetricWeight =
-      (dataInputs.itemWidth * dataInputs.itemHeight * dataInputs.itemLength) /
-      VOLUMETRIC_WEIGHT_RATIO_IMPERIAL
+      ((dataInputs.itemWidth *
+        2.54 *
+        (dataInputs.itemHeight * 2.54) *
+        (dataInputs.itemLength * 2.54)) /
+        VOLUMETRIC_WEIGHT_RATIO_METRIC) *
+      2.20462
   }
 
   let weightFromUserInput
