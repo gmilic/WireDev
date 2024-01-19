@@ -285,8 +285,10 @@
     }
 
     if (containerSize === '20FT') {
-      containerUtilization = 92
-    } else {
+      containerUtilization = CONTAINER_20FOOT_UTILIZATION
+    } else if (containerSize === '40FT') {
+      containerUtilization = CONTAINER_40FOOT_UTILIZATION
+    } else if (containerSize === 'LCL') {
       containerUtilization = 100
     }
 
@@ -301,7 +303,7 @@
       containerSize,
       unitType,
       containerUtilization
-    ) // 92% utilization ???????
+    )
 
     let oceanFreight = costPerContainerOcean / maxUnitsPerContainer
 
@@ -506,7 +508,7 @@
     itemVolume,
     containerType,
     measuringUnit = 'imperial',
-    utilizationPercentage = 92
+    utilizationPercentage = 82
   ) {
     // Get container volume based on type
     const containerVolumeImperial = {
