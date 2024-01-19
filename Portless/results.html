@@ -17,6 +17,15 @@
     padding: 1rem 4px;
     font-size: 1.2rem;
   }
+  #calc_details-wrap,
+  #calc_table-freight,
+  #calc_table-3pl {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 32px;
+    box-shadow: 0 14px 50px -4px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+  }
 </style>
 <script>
   // **************** CONST ****************
@@ -26,6 +35,8 @@
 
   // **************** DOM ELEMENTS ****************
   const calcDetailsWrap = document.getElementById('calc_details-wrap')
+  const calcTableFreight = document.getElementById('calc_table-freight')
+  const calcTable3pl = document.getElementById('calc_table-3pl')
 
   // **************** INPUT DATA ****************
   const totalPrice = sessionStorage.getItem('totalPrice')
@@ -72,6 +83,35 @@
   </table>
   `
   calcDetailsWrap.innerHTML = calcDetails
+
+  calcTableFreight.innerHTML = `
+  <table class="calcDetailTable">
+  <tr><td>Ocean Freight (Container Cost)</td><td class="price">${curency}${dataCalculations.oceanFreight}</td></tr>
+  <tr><td>Importer Security Filing & Bond</td><td class="price">${curency}${dataCalculations.importerSecurityFilingBondCalculated}</td></tr>
+  <tr><td>Handling Fee</td><td class="price">${curency}${dataCalculations.handlingFeeCalculated}</td></tr>
+  <tr><td>Drayage</td><td class="price">${curency}${dataCalculations.drayageCalculated}</td></tr>
+  <tr><td>Chassis</td><td class="price">${curency}${dataCalculations.chassisCalculated}</td></tr>
+  <tr><td>Congestion Fee</td><td class="price">${curency}${dataCalculations.congestionFeeCalculated}</td></tr>
+  <tr><td>Security Surcharge</td><td class="price">${curency}${dataCalculations.securitySurchargeCalculated}</td></tr>
+  <tr><td>Inland Fuel Surcharge</td><td class="price">${curency}${dataCalculations.inlandFuelSurchargeCalculated}</td></tr>
+  <tr><td>Hazmat</td><td class="price">${curency}${dataCalculations.hazmatCalculated}</td></tr>
+  <tr><td>Delivery</td><td class="price">${curency}${dataCalculations.deliveryCalculated}</td></tr>
+  <tr><td>Detention Fee</td><td class="price">${curency}${dataCalculations.detentionFeeCalculated}</td></tr>
+  <tr><td>Pre-Pull</td><td class="price">${curency}${dataCalculations.prePullCalculated}</td></tr>
+  <tr><td>Customs / Tariff Rate</td><td class="price">${curency}${dataCalculations.customsTarifRate}</td></tr>
+  </table>
+  `
+
+  calcTable3pl.innerHTML = `
+  <table class="calcDetailTable">
+  <tr><td>Monthly Account Fee</td><td class="price">${curency}${dataCalculations.monthlyAccountFee}</td></tr>
+  <tr><td>Receiving / Inbound Fee</td><td class="price">${curency}${dataCalculations.receivingInboundFee}</td></tr>
+  <tr><td>Storage / Warehousing Fee</td><td class="price">${curency}${dataCalculations.storageWarehouseFee}</td></tr>
+  <tr><td>Pick & Pack Fee</td><td class="price">${curency}${dataCalculations.pickPackPerOrder}</td></tr>
+  <tr><td>Material Fees</td><td class="price">${curency}${dataCalculations.materiialsFeePerOrder}</td></tr>
+  <tr><td>Shipping Cost</td><td class="price">${curency}${dataCalculations.averageShippingCostPerOrder}</td></tr>
+    </table>
+  `
 
   // **************** PORTLESS INPUT TABLE ****************
 
