@@ -245,9 +245,6 @@
     overstockClearanceItems = document.getElementById(
       'OverstockClearanceItems'
     ).value
-    if (overstockClearanceItems == 0) {
-      overstockClearanceItems = 0.000000001
-    }
 
     daysUntilPayment = document.getElementById('DaysUntilPayment').value
     customsClearance = document.getElementById('CustomsClearance').value
@@ -414,12 +411,18 @@
       itemWidth: itemWidth,
       itemHeight: itemHeight,
       itemLength: itemLength,
+      itemVolume: itemVolume,
       currentImportMethod: currentImportMethod,
       containerSize: containerSize
     }
     sessionStorage.setItem('dataInputs', JSON.stringify(dataInputs))
 
     let dataCalculations = {
+      overstockClearanceItems: overstockClearanceItems,
+      apr: apr,
+      daysUntilPayment: daysUntilPayment,
+      calculatedItemsPerPallet: calculatedItemsPerPallet,
+      maxUnitsPerContainer: maxUnitsPerContainer,
       oceanFreight: oceanFreight,
       airFreightCalculated: airFreightCalculated,
       importerSecurityFilingBondCalculated:
