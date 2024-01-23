@@ -46,7 +46,7 @@
   if (dataInputs.unitType === 'imperial') {
     UNIT_LENGTH = 'inches'
     UNIT_WEIGTH = 'lbs'
-    UNIT_LENGTH_VOLUME = ' cubic inches'
+    UNIT_LENGTH_VOLUME = ' cubic feets'
   } else {
     UNIT_LENGTH = 'cm'
     UNIT_WEIGTH = 'kg'
@@ -60,8 +60,10 @@
   console.log(dataInputs)
   console.log(dataCalculations)
   // **************** DISPLAY FIRST PARAGRAPH ****************
+  // document.getElementById('display_item-volume').innerHTML =
+  //   roundToTwoDecimalPlaces(dataInputs.itemVolume) + UNIT_LENGTH_VOLUME
   document.getElementById('display_item-volume').innerHTML =
-    roundToTwoDecimalPlaces(dataInputs.itemVolume) + UNIT_LENGTH_VOLUME
+    dataInputs.itemVolume + UNIT_LENGTH_VOLUME
 
   let containerType = ''
   let containerDetails = ''
@@ -79,12 +81,14 @@
       '(assuming the industry standard of 2,386.08 cubic feets container max volume and an 80.1% utilization rate).'
   }
   document.getElementById('display_items-per-container').innerHTML =
-    Math.round(dataCalculations.maxUnitsPerContainer) +
+    Math.round(dataCalculations.maxUnitsPerContainer).toLocaleString() +
     containerType +
     containerDetails
   // **************** DISPLAY 3PL ****************
+  // document.getElementById('display-3pl-size').innerHTML =
+  //   roundToTwoDecimalPlaces(dataInputs.itemVolume) + UNIT_LENGTH_VOLUME
   document.getElementById('display-3pl-size').innerHTML =
-    roundToTwoDecimalPlaces(dataInputs.itemVolume) + UNIT_LENGTH_VOLUME
+    dataInputs.itemVolume + UNIT_LENGTH_VOLUME
   document.getElementById('display-3pl-units-on-palete').innerHTML = Math.round(
     dataCalculations.calculatedItemsPerPallet
   )

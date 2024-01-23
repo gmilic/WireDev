@@ -22,6 +22,16 @@
   step04.classList.add('hidden-section')
   step05.classList.add('hidden-section')
 
+  // **************** FIELDS FOR VALIDATION ***************
+  itemNameFIELD = document.getElementById('ProductName')
+  itemWeightFIELD = document.getElementById('Weight')
+  unitsPerMonthFIELD = document.getElementById('UnitsPerMonth')
+  costPerUnitFIELD = document.getElementById('CostPerUnit')
+  itemWidthFIELD = document.getElementById('Width')
+  itemHeightFIELD = document.getElementById('Height')
+  itemLengthFIELD = document.getElementById('Length')
+  containerSizeFIELD = document.getElementById('ContainerSize')
+
   // **************** Buttonss ***************
   const calcStartButton = document.getElementById('CalcStart')
   const calcNext1Button = document.getElementById('CalcNext1')
@@ -39,17 +49,29 @@
   })
   calcNext1Button.addEventListener('click', function (e) {
     e.preventDefault
-    step01.classList.add('hidden-section')
-    step02.classList.remove('hidden-section')
-    step02.classList.add('show-section')
-    window.scrollTo(0, 0)
+    if (
+      itemNameFIELD.reportValidity() &&
+      itemWeightFIELD.reportValidity() &&
+      unitsPerMonthFIELD.reportValidity() &&
+      costPerUnitFIELD.reportValidity() &&
+      itemWidthFIELD.reportValidity() &&
+      itemHeightFIELD.reportValidity() &&
+      itemLengthFIELD.reportValidity()
+    ) {
+      step01.classList.add('hidden-section')
+      step02.classList.remove('hidden-section')
+      step02.classList.add('show-section')
+      window.scrollTo(0, 0)
+    }
   })
   calcNext2Button.addEventListener('click', function (e) {
     e.preventDefault
-    step02.classList.add('hidden-section')
-    step03.classList.remove('hidden-section')
-    step03.classList.add('show-section')
-    window.scrollTo(0, 0)
+    if (containerSizeFIELD.reportValidity()) {
+      step02.classList.add('hidden-section')
+      step03.classList.remove('hidden-section')
+      step03.classList.add('show-section')
+      window.scrollTo(0, 0)
+    }
   })
   calcNext3Button.addEventListener('click', function (e) {
     e.preventDefault
@@ -87,10 +109,35 @@
   document.getElementById('Height').value = 2
   document.getElementById('Length').value = 3
   document.getElementById('Weight').value = 0.5
+  //
   // document.getElementById('Width').value = 38.1
   // document.getElementById('Height').value = 63.5
   // document.getElementById('Length').value = 50.8
   // document.getElementById('Weight').value = 0.226796
+
+  // **************** UNITS SELECTOR ***************
+
+  const LBS_ELEMENTS = document.getElementsByClassName('calc_units-weight')
+  const INCH_ELEMENTS = document.getElementsByClassName('calc_units-lenght')
+  const unitTypeElement = document.getElementById('UnitType')
+  unitTypeElement.addEventListener('change', function (e) {
+    if (unitTypeElement.value === 'imperial') {
+      for (let i = 0; i < LBS_ELEMENTS.length; i++) {
+        LBS_ELEMENTS[i].innerHTML = 'lbs'
+      }
+      for (let i = 0; i < INCH_ELEMENTS.length; i++) {
+        INCH_ELEMENTS[i].innerHTML = 'inches'
+      }
+    } else if (unitTypeElement.value === 'metric') {
+      for (let i = 0; i < LBS_ELEMENTS.length; i++) {
+        LBS_ELEMENTS[i].innerHTML = 'kg'
+      }
+      for (let i = 0; i < INCH_ELEMENTS.length; i++) {
+        INCH_ELEMENTS[i].innerHTML = 'cm'
+      }
+    } else {
+    }
+  })
 
   // **************** Radio buttons ***************
   const currentImportMethodElement = document.getElementsByName('CurrentMethod')
