@@ -37,6 +37,7 @@
   let dataCalculations = JSON.parse(sessionStorage.getItem('dataCalculations'))
 
   // **************** CONST ****************
+  const PORTLES_PRICE_MIN_MAX_CALC = 10 //for now - percentage
   let curency = '$'
   const VOLUMETRIC_WEIGHT_RATIO_METRIC = 8000
   let UNIT_LENGTH
@@ -136,6 +137,14 @@
   const calcDetailsWrap = document.getElementById('calc_details-wrap')
   const calcTableFreight = document.getElementById('calc_table-freight')
   const calcTable3pl = document.getElementById('calc_table-3pl')
+  const calcPortlessPrice = document.getElementById('portless-calc_price')
+  const calcPortlessNoPrice = document.getElementById('portless-calc_no-price')
+  const calcPortlessPriceMin = document.getElementById(
+    'display-portless-price-min'
+  )
+  const calcPortlessPriceMax = document.getElementById(
+    'display-portless-price-max'
+  )
 
   // go trough  dataCalculations object and pull all values trough Math.round((num + Number.EPSILON) * 100) / 100
   for (let key in dataCalculations) {
@@ -453,28 +462,35 @@
 
   // **************** DISPLAY PORTLESS ****************
 
-  console.log('++++++++++++++++++++++++++++++++++++++++++++')
-  console.log(dataInputs.costPerUnit)
-
-  console.log('++++++++++++++++++++++++++++++++++++++++++++')
   document.getElementById('display-portless-percentage').innerHTML =
     Math.round((dataInputs.costPerUnit / totalPrice) * 100) + '%'
 
-  /*
+  if (portlessPrice === -1) {
+    calcPortlessPrice.style.display = 'none'
+    calcPortlessNoPrice.style.display = 'block'
+  } else {
+    calcPortlessPrice.style.display = 'block'
+    calcPortlessNoPrice.style.display = 'none'
 
-display-portless-price-min
-display-portless-price-max
+    //calculate min and max price from portlessPrice and PORTLES_PRICE_MIN_MAX_CALC
+    let portlessPriceMin =
+      portlessPrice - (portlessPrice * PORTLES_PRICE_MIN_MAX_CALC) / 100
+    let portlessPriceMax =
+      portlessPrice + (portlessPrice * PORTLES_PRICE_MIN_MAX_CALC) / 100
 
-
-  */
+    calcPortlessPriceMin.innerHTML =
+      curency + roundToTwoDecimalPlaces(portlessPriceMin).toFixed(2)
+    calcPortlessPriceMax.innerHTML =
+      curency + roundToTwoDecimalPlaces(portlessPriceMax).toFixed(2)
+  }
 
   // **************** LOG ****************
-  console.log('dataInputs.unitType', dataInputs.unitType)
-  console.log('dataInputs.itemWidth', dataInputs.itemWidth)
-  console.log('dataInputs.itemHeight', dataInputs.itemHeight)
-  console.log('dataInputs.itemLength', dataInputs.itemLength)
-  console.log('volumetricWeight', volumetricWeight)
-  console.log('dataInputs.itemWeight', dataInputs.itemWeight)
+  // console.log('dataInputs.unitType', dataInputs.unitType)
+  // console.log('dataInputs.itemWidth', dataInputs.itemWidth)
+  // console.log('dataInputs.itemHeight', dataInputs.itemHeight)
+  // console.log('dataInputs.itemLength', dataInputs.itemLength)
+  // console.log('volumetricWeight', volumetricWeight)
+  // console.log('dataInputs.itemWeight', dataInputs.itemWeight)
   console.log('===================================================')
   console.log('itemWeightCalculated', itemWeightCalculated)
   console.log('portlessPrice', portlessPrice)
