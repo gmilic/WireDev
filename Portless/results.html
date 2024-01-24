@@ -46,7 +46,7 @@
   if (dataInputs.unitType === 'imperial') {
     UNIT_LENGTH = 'inches'
     UNIT_WEIGTH = 'lbs'
-    UNIT_LENGTH_VOLUME = ' cubic feets'
+    UNIT_LENGTH_VOLUME = ' cubic inches'
   } else {
     UNIT_LENGTH = 'cm'
     UNIT_WEIGTH = 'kg'
@@ -63,7 +63,11 @@
   // document.getElementById('display_item-volume').innerHTML =
   //   roundToTwoDecimalPlaces(dataInputs.itemVolume) + UNIT_LENGTH_VOLUME
   document.getElementById('display_item-volume').innerHTML =
-    dataInputs.itemVolume + UNIT_LENGTH_VOLUME
+    (
+      dataInputs.itemHeight *
+      dataInputs.itemLength *
+      dataInputs.itemWidth
+    ).toFixed(2) + UNIT_LENGTH_VOLUME
 
   let containerType = ''
   let containerDetails = ''
@@ -88,18 +92,23 @@
   // document.getElementById('display-3pl-size').innerHTML =
   //   roundToTwoDecimalPlaces(dataInputs.itemVolume) + UNIT_LENGTH_VOLUME
   document.getElementById('display-3pl-size').innerHTML =
-    dataInputs.itemVolume + UNIT_LENGTH_VOLUME
+    (
+      dataInputs.itemHeight *
+      dataInputs.itemLength *
+      dataInputs.itemWidth
+    ).toFixed(2) + UNIT_LENGTH_VOLUME
   document.getElementById('display-3pl-units-on-palete').innerHTML = Math.round(
     dataCalculations.calculatedItemsPerPallet
-  )
+  ).toLocaleString()
   // **************** DISPLAY Financing ****************
   document.getElementById('display-day-payment-01').innerHTML =
     dataCalculations.daysUntilPayment
   document.getElementById('display-day-payment-02').innerHTML =
     dataCalculations.daysUntilPayment
 
-  document.getElementById('display-financing-units-month').innerHTML =
+  document.getElementById('display-financing-units-month').innerHTML = parseInt(
     dataInputs.unitsPerMonth
+  ).toLocaleString()
   document.getElementById('display-financing-cost-unit').innerHTML =
     curency + dataInputs.costPerUnit
   // [the calculation is (units/month)*(cost/unit)*(APR/12).
@@ -109,12 +118,12 @@
       (dataCalculations.apr / 12 / 100)
   )
   document.getElementById('display-financing-aprox-price').innerHTML =
-    curency + costPerMonthInventory + '.'
+    curency + costPerMonthInventory.toLocaleString() + '.'
   // multiply the previous answer (which is a monthly cost) by the length of the cash flow cycle (i.e. 2 months, 3 months, etc.)]
   let finsncingFlowCycle =
     costPerMonthInventory * daysToMonth(dataCalculations.daysUntilPayment)
   document.getElementById('display-financing-flow-cycle').innerHTML =
-    finsncingFlowCycle
+    finsncingFlowCycle.toLocaleString()
   let averageCostPerUnit = finsncingFlowCycle / dataInputs.unitsPerMonth
   document.getElementById('display-financing-per-unit').innerHTML =
     averageCostPerUnit
