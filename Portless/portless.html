@@ -32,6 +32,8 @@
   itemLengthFIELD = document.getElementById('Length')
   containerSizeFIELD = document.getElementById('ContainerSize')
 
+  // **************** HS message field ***************
+  const messageHS = document.getElementById('calc_message_HS')
   // **************** Buttonss ***************
   const calcStartButton = document.getElementById('CalcStart')
   const calcNext1Button = document.getElementById('CalcNext1')
@@ -537,6 +539,66 @@
     console.log('Total Price: ' + totalPrice)
     console.log('====================================')
 
+    // **************** messageHS content ****************
+    let messageHSContent = 'Product Name: ' + itemName + '\\n'
+    messageHSContent += 'Product Weight: ' + itemWeight + '\\n'
+    messageHSContent += 'Units Per Month: ' + unitsPerMonth + '\\n'
+    messageHSContent += 'Cost Per Unit: ' + costPerUnit + '\\n'
+    messageHSContent += 'Item Width: ' + itemWidth + '\\n'
+    messageHSContent += 'Item Height: ' + itemHeight + '\\n'
+    messageHSContent += 'Item Length: ' + itemLength + '\\n'
+    messageHSContent += 'Container Size: ' + containerSize + '\\n'
+    messageHSContent += 'Current Import Method: ' + currentImportMethod + '\\n'
+    messageHSContent += 'Unit Type: ' + unitType + '\\n'
+    messageHSContent +=
+      'Overstock Clearance Items: ' + overstockClearanceItems + '\\n'
+    messageHSContent += 'APR: ' + apr + '\\n'
+    messageHSContent += 'Days Until Payment: ' + daysUntilPayment + '\\n'
+    messageHSContent +=
+      'Calculated Items Per Pallet: ' + calculatedItemsPerPallet + '\\n'
+    messageHSContent +=
+      'Max Units Per Container: ' + maxUnitsPerContainer + '\\n'
+    messageHSContent += 'Ocean Freight: ' + oceanFreight + '\\n'
+    messageHSContent +=
+      'Air Freight Calculated: ' + airFreightCalculated + '\\n'
+    messageHSContent +=
+      'Importer Security Filing Bond Calculated: ' +
+      importerSecurityFilingBondCalculated +
+      '\\n'
+    messageHSContent +=
+      'Handling Fee Calculated: ' + handlingFeeCalculated + '\\n'
+    messageHSContent += 'Drayage Calculated: ' + drayageCalculated + '\\n'
+    messageHSContent += 'Chassis Calculated: ' + chassisCalculated + '\\n'
+    messageHSContent +=
+      'Congestion Fee Calculated: ' + congestionFeeCalculated + '\\n'
+    messageHSContent +=
+      'Security Surcharge Calculated: ' + securitySurchargeCalculated + '\\n'
+    messageHSContent +=
+      'Inland Fuel Surcharge Calculated: ' +
+      inlandFuelSurchargeCalculated +
+      '\\n'
+    messageHSContent += 'Hazmat Calculated: ' + hazmatCalculated + '\\n'
+    messageHSContent += 'Delivery Calculated: ' + deliveryCalculated + '\\n'
+    messageHSContent +=
+      'Detention Fee Calculated: ' + detentionFeeCalculated + '\\n'
+    messageHSContent += 'Pre Pull Calculated: ' + prePullCalculated + '\\n'
+    messageHSContent += 'Customs Tarif Rate: ' + customsTarifRate + '\\n'
+    messageHSContent +=
+      'Customs Clearance Calculated: ' + customsClearanceCalculated + '\\n'
+    messageHSContent += 'Monthly Account Fee: ' + monthlyAccountFee + '\\n'
+    messageHSContent += 'Receiving Inbound Fee: ' + receivingInboundFee + '\\n'
+    messageHSContent += 'Storage Warehouse Fee: ' + storageWarehouseFee + '\\n'
+    messageHSContent += 'Pick Pack Per Order: ' + pickPackPerOrder + '\\n'
+    messageHSContent +=
+      'Materiials Fee Per Order: ' + materiialsFeePerOrder + '\\n'
+    messageHSContent +=
+      'Average Shipping Cost Per Order: ' + averageShippingCostPerOrder + '\\n'
+    messageHSContent +=
+      'Inventory Financing Cost: ' + inventoryFinancingCost + '\\n'
+    messageHSContent += 'Overstock Cost: ' + overstockCost + '\\n' + '\\n'
+    messageHSContent += 'Total Price: ' + totalPrice + '\\n'
+
+    messageHS.value = messageHSContent
     // **************** redirect to results page ****************
     window.location.href = '/calc/result'
   })
