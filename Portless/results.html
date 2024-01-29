@@ -1,7 +1,7 @@
 <style>
   .calcDetailTable td {
     padding: 4px;
-    min-width: 250px;
+    min-width: 160px;
     border-bottom: 1px solid grey;
   }
   .calcDetailTable th {
@@ -13,7 +13,7 @@
     border-right: 6px solid #fff;
   }
   .calcDetailTable .price {
-    text-align: center;
+    text-align: right;
   }
   .calcDetailTable .total td {
     padding: 1rem 4px;
@@ -28,6 +28,19 @@
     box-shadow: 0 14px 50px -4px rgba(0, 0, 0, 0.2);
     display: inline-block;
   }
+  #calc_table-freight,
+  #calc_table-3pl {
+    padding: 80px 40px 60px 40px;
+  }
+  .small-table_heading {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #0d1f5f;
+    text-align: center;
+  }
+  .tableFirstRow td {
+    padding: 1rem 4px;
+  }
 </style>
 <script>
   // **************** INPUT DATA ****************
@@ -35,6 +48,10 @@
   let dataInputs = JSON.parse(sessionStorage.getItem('dataInputs'))
 
   let dataCalculations = JSON.parse(sessionStorage.getItem('dataCalculations'))
+
+  let grandTotalPrice = (
+    parseFloat(totalPrice) + parseFloat(dataInputs.costPerUnit)
+  ).toFixed(2)
 
   // **************** CONST ****************
   const PORTLES_PRICE_MIN_MAX_CALC = 10 //for now - percentage
@@ -72,19 +89,20 @@
   let containerType = ''
   let containerDetails = ''
   if (dataInputs.containerSize === 'LCL') {
-    containerType = ' units in an LCL shipment '
+    containerType = ' units</strong> in an LCL shipment '
     containerDetails =
       '(assuming the industry average of 55 cubic feets (1.55 cubic meters) per LCL shipment).'
   } else if (dataInputs.containerSize === '20FT') {
-    containerType = ' units in a 20 foot container '
+    containerType = ' units</strong> in a 20 foot container '
     containerDetails =
-      '(assuming the industry standard of 1,170.23 cubic feets container max volume and an 80.1% utilization rate).'
+      '(assuming the industry standard of 1,170.23 cubic feets container max volume and an <strong>80.1% utilization rate</strong>).'
   } else if (dataInputs.containerSize === '40FT') {
-    containerType = ' units in a 40 foot container '
+    containerType = ' units</strong> in a 40 foot container '
     containerDetails =
-      '(assuming the industry standard of 2,386.08 cubic feets container max volume and an 80.1% utilization rate).'
+      '(assuming the industry standard of 2,386.08 cubic feets container max volume and an <strong>80.1% utilization rate</strong>).'
   }
   document.getElementById('display_items-per-container').innerHTML =
+    '<strong>' +
     Math.round(dataCalculations.maxUnitsPerContainer).toLocaleString() +
     containerType +
     containerDetails
@@ -167,64 +185,228 @@
     ).toFixed(2)
   }
 
+  let costPerUnit = roundToTwoDecimalPlaces(
+    parseFloat(dataInputs.costPerUnit)
+  ).toFixed(2)
+
   // **************** DISPLAY TABLE DATA ****************
   let calcDetails = `
         <table class="calcDetailTable">
-        <tr><th colspan="2">Fulfillment costs per item</th><th>Traditional method</th></tr>
-        <tr><td rowspan="12">Freight Costs</td><td>Ocean Freight (Container Cost)</td><td class="price">${curency}${dataCalculations.oceanFreight}</td></tr>
-        <tr><td>Importer Security Filing & Bond</td><td class="price">${curency}${dataCalculations.importerSecurityFilingBondCalculated}</td></tr>
-        <tr><td>Handling Fee</td><td class="price">${curency}${dataCalculations.handlingFeeCalculated}</td></tr>
-        <tr><td>Drayage</td><td class="price">${curency}${dataCalculations.drayageCalculated}</td></tr>
-        <tr><td>Chassis</td><td class="price">${curency}${dataCalculations.chassisCalculated}</td></tr>
-        <tr><td>Congestion Fee</td><td class="price">${curency}${dataCalculations.congestionFeeCalculated}</td></tr>
-        <tr><td>Security Surcharge</td><td class="price">${curency}${dataCalculations.securitySurchargeCalculated}</td></tr>
-        <tr><td>Inland Fuel Surcharge</td><td class="price">${curency}${dataCalculations.inlandFuelSurchargeCalculated}</td></tr>
-        <tr><td>Hazmat</td><td class="price">${curency}${dataCalculations.hazmatCalculated}</td></tr>
-        <tr><td>Delivery</td><td class="price">${curency}${dataCalculations.deliveryCalculated}</td></tr>
-        <tr><td>Detention Fee</td><td class="price">${curency}${dataCalculations.detentionFeeCalculated}</td></tr>
-        <tr><td>Pre-Pull</td><td class="price">${curency}${dataCalculations.prePullCalculated}</td></tr>
-        <tr><td>Air Freight</td><td></td><td class="price">${curency}${dataCalculations.airFreightCalculated}</td></tr>
-        <tr><td rowspan="2">Customs Costs</td><td>Customs / Tariff Rate</td><td class="price">${curency}${dataCalculations.customsTarifRate}</td></tr>
-        <tr><td>Custom Clearance</td><td class="price">${curency}${dataCalculations.customsClearanceCalculated}</td></tr>
-        <tr><td rowspan="6">3PL / Shipping Fees</td><td>Monthly Account Fee</td><td class="price">${curency}${dataCalculations.monthlyAccountFee}</td></tr>
-        <tr><td>Receiving / Inbound Fee</td><td class="price">${curency}${dataCalculations.receivingInboundFee}</td></tr>
-        <tr><td>Storage / Warehousing Fee</td><td class="price">${curency}${dataCalculations.storageWarehouseFee}</td></tr>
-        <tr><td>Pick & Pack Fee</td><td class="price">${curency}${dataCalculations.pickPackPerOrder}</td></tr>
-        <tr><td>Material Fees</td><td class="price">${curency}${dataCalculations.materiialsFeePerOrder}</td></tr>
-        <tr><td>Shipping Cost</td><td class="price">${curency}${dataCalculations.averageShippingCostPerOrder}</td></tr>
-        <tr><td rowspan="2">Indirect Costs</td><td>Inventory Financing Cost</td><td class="price">${curency}${dataCalculations.inventoryFinancingCost}</td></tr>
-        <tr><td>Overstock Cost</td><td class="price">${curency}${dataCalculations.overstockCost}</td></tr>
-        <tr class="total"><td><strong>Totals</strong></td><td><strong>Total Price / Order</strong></td><td class="price"><strong>${curency}${totalPrice}</strong></td></tr>
+        <tr><th colspan="2"></th><th>Fulfillment costs per item</th><th>% of total price</th></tr>
+        <tr class="tableFirstRow"><td>Product Cost</td><td></td><td class="price">${curency}${costPerUnit}</td><td class="price">${percentInGrandTotal(
+    costPerUnit
+  )}</td></tr>
+        <tr><td rowspan="12">Freight Costs</td><td>Ocean Freight (Container Cost)</td><td class="price">${lessThan001(
+          dataCalculations.oceanFreight
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.oceanFreight
+  )}</td></tr>
+        <tr><td>Importer Security Filing & Bond</td><td class="price">${lessThan001(
+          dataCalculations.importerSecurityFilingBondCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.importerSecurityFilingBondCalculated
+  )}</td></tr>
+        <tr><td>Handling Fee</td><td class="price">${lessThan001(
+          dataCalculations.handlingFeeCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.handlingFeeCalculated
+  )}</td></tr>
+        <tr><td>Drayage</td><td class="price">${lessThan001(
+          dataCalculations.drayageCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.drayageCalculated
+  )}</td></tr>
+        <tr><td>Chassis</td><td class="price">${lessThan001(
+          dataCalculations.chassisCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.chassisCalculated
+  )}</td></tr>
+        <tr><td>Congestion Fee</td><td class="price">${lessThan001(
+          dataCalculations.congestionFeeCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.congestionFeeCalculated
+  )}</td></tr>
+        <tr><td>Security Surcharge</td><td class="price">${lessThan001(
+          dataCalculations.securitySurchargeCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.securitySurchargeCalculated
+  )}</td></tr>
+        <tr><td>Inland Fuel Surcharge</td><td class="price">${lessThan001(
+          dataCalculations.inlandFuelSurchargeCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.inlandFuelSurchargeCalculated
+  )}</td></tr>
+        <tr><td>Hazmat</td><td class="price">${lessThan001(
+          dataCalculations.hazmatCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.hazmatCalculated
+  )}</td></tr>
+        <tr><td>Delivery</td><td class="price">${lessThan001(
+          dataCalculations.deliveryCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.deliveryCalculated
+  )}</td></tr>
+        <tr><td>Detention Fee</td><td class="price">${lessThan001(
+          dataCalculations.detentionFeeCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.detentionFeeCalculated
+  )}</td></tr>
+        <tr><td>Pre-Pull</td><td class="price">${lessThan001(
+          dataCalculations.prePullCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.prePullCalculated
+  )}</td></tr>
+        <tr><td>Air Freight</td><td></td><td class="price">${lessThan001(
+          dataCalculations.airFreightCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.airFreightCalculated
+  )}</td></tr>
+        <tr><td rowspan="2">Customs Costs</td><td>Customs / Tariff Fee</td><td class="price">${lessThan001(
+          dataCalculations.customsTarifRate
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.customsTarifRate
+  )}</td></tr>
+        <tr><td>Custom Clearance</td><td class="price">${lessThan001(
+          dataCalculations.customsClearanceCalculated
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.customsClearanceCalculated
+  )}</td></tr>
+        <tr><td rowspan="6">3PL / Shipping Fees</td><td>Monthly Account Fee</td><td class="price">${lessThan001(
+          dataCalculations.monthlyAccountFee
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.monthlyAccountFee
+  )}</td></tr>
+        <tr><td>Receiving / Inbound Fee</td><td class="price">${lessThan001(
+          dataCalculations.receivingInboundFee
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.receivingInboundFee
+  )}</td></tr>
+        <tr><td>Storage / Warehousing Fee</td><td class="price">${lessThan001(
+          dataCalculations.storageWarehouseFee
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.storageWarehouseFee
+  )}</td></tr>
+        <tr><td>Pick & Pack Fee</td><td class="price">${lessThan001(
+          dataCalculations.pickPackPerOrder
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.pickPackPerOrder
+  )}</td></tr>
+        <tr><td>Material Fees</td><td class="price">${lessThan001(
+          dataCalculations.materiialsFeePerOrder
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.materiialsFeePerOrder
+  )}</td></tr>
+        <tr><td>Shipping Cost</td><td class="price">${lessThan001(
+          dataCalculations.averageShippingCostPerOrder
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.averageShippingCostPerOrder
+  )}</td></tr>
+        <tr><td rowspan="2">Indirect Costs</td><td>Inventory Financing Cost</td><td class="price">${lessThan001(
+          dataCalculations.inventoryFinancingCost
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.inventoryFinancingCost
+  )}</td></tr>
+        <tr><td>Overstock Cost</td><td class="price">${lessThan001(
+          dataCalculations.overstockCost
+        )}</td><td class="price">${percentInGrandTotal(
+    dataCalculations.overstockCost
+  )}</td></tr>
+        <tr class="total"><td><strong>Totals</strong></td><td><strong>Total Price / Order</strong></td><td class="price"><strong>${curency}${grandTotalPrice}</strong></td><td></td></tr>
         </table>
         `
   calcDetailsWrap.innerHTML = calcDetails
 
+  let freightTotal =
+    parseFloat(dataCalculations.oceanFreight) +
+    parseFloat(dataCalculations.importerSecurityFilingBondCalculated) +
+    parseFloat(dataCalculations.handlingFeeCalculated) +
+    parseFloat(dataCalculations.drayageCalculated) +
+    parseFloat(dataCalculations.chassisCalculated) +
+    parseFloat(dataCalculations.congestionFeeCalculated) +
+    parseFloat(dataCalculations.securitySurchargeCalculated) +
+    parseFloat(dataCalculations.inlandFuelSurchargeCalculated) +
+    parseFloat(dataCalculations.hazmatCalculated) +
+    parseFloat(dataCalculations.deliveryCalculated) +
+    parseFloat(dataCalculations.detentionFeeCalculated) +
+    parseFloat(dataCalculations.prePullCalculated) +
+    parseFloat(dataCalculations.customsTarifRate)
+
   calcTableFreight.innerHTML = `
+        <h2 class='small-table_heading'>Freight cost per unit</h2>
         <table class="calcDetailTable">
-        <tr><td>Ocean Freight (Container Cost)</td><td class="price">${curency}${dataCalculations.oceanFreight}</td></tr>
-        <tr><td>Importer Security Filing & Bond</td><td class="price">${curency}${dataCalculations.importerSecurityFilingBondCalculated}</td></tr>
-        <tr><td>Handling Fee</td><td class="price">${curency}${dataCalculations.handlingFeeCalculated}</td></tr>
-        <tr><td>Drayage</td><td class="price">${curency}${dataCalculations.drayageCalculated}</td></tr>
-        <tr><td>Chassis</td><td class="price">${curency}${dataCalculations.chassisCalculated}</td></tr>
-        <tr><td>Congestion Fee</td><td class="price">${curency}${dataCalculations.congestionFeeCalculated}</td></tr>
-        <tr><td>Security Surcharge</td><td class="price">${curency}${dataCalculations.securitySurchargeCalculated}</td></tr>
-        <tr><td>Inland Fuel Surcharge</td><td class="price">${curency}${dataCalculations.inlandFuelSurchargeCalculated}</td></tr>
-        <tr><td>Hazmat</td><td class="price">${curency}${dataCalculations.hazmatCalculated}</td></tr>
-        <tr><td>Delivery</td><td class="price">${curency}${dataCalculations.deliveryCalculated}</td></tr>
-        <tr><td>Detention Fee</td><td class="price">${curency}${dataCalculations.detentionFeeCalculated}</td></tr>
-        <tr><td>Pre-Pull</td><td class="price">${curency}${dataCalculations.prePullCalculated}</td></tr>
-        <tr><td>Customs / Tariff Rate</td><td class="price">${curency}${dataCalculations.customsTarifRate}</td></tr>
+        <tr><td>Ocean Freight (Container Cost)</td><td class="price">${lessThan001(
+          dataCalculations.oceanFreight
+        )}</td></tr>
+        <tr><td>Importer Security Filing & Bond</td><td class="price">${lessThan001(
+          dataCalculations.importerSecurityFilingBondCalculated
+        )}</td></tr>
+        <tr><td>Handling Fee</td><td class="price">${lessThan001(
+          dataCalculations.handlingFeeCalculated
+        )}</td></tr>
+        <tr><td>Drayage</td><td class="price">${lessThan001(
+          dataCalculations.drayageCalculated
+        )}</td></tr>
+        <tr><td>Chassis</td><td class="price">${lessThan001(
+          dataCalculations.chassisCalculated
+        )}</td></tr>
+        <tr><td>Congestion Fee</td><td class="price">${lessThan001(
+          dataCalculations.congestionFeeCalculated
+        )}</td></tr>
+        <tr><td>Security Surcharge</td><td class="price">${lessThan001(
+          dataCalculations.securitySurchargeCalculated
+        )}</td></tr>
+        <tr><td>Inland Fuel Surcharge</td><td class="price">${lessThan001(
+          dataCalculations.inlandFuelSurchargeCalculated
+        )}</td></tr>
+        <tr><td>Hazmat</td><td class="price">${lessThan001(
+          dataCalculations.hazmatCalculated
+        )}</td></tr>
+        <tr><td>Delivery</td><td class="price">${lessThan001(
+          dataCalculations.deliveryCalculated
+        )}</td></tr>
+        <tr><td>Detention Fee</td><td class="price">${lessThan001(
+          dataCalculations.detentionFeeCalculated
+        )}</td></tr>
+        <tr><td>Pre-Pull</td><td class="price">${lessThan001(
+          dataCalculations.prePullCalculated
+        )}</td></tr>
+        <tr><td>Customs / Tariff Fee</td><td class="price">${lessThan001(
+          dataCalculations.customsTarifRate
+        )}</td></tr>
+        <tr class="total"><td><strong>Total price per unit</strong></td><td class="price"><strong>${curency}${freightTotal}</strong></td></tr>
         </table>
         `
 
+  let table3plTotal =
+    parseFloat(dataCalculations.monthlyAccountFee) +
+    parseFloat(dataCalculations.receivingInboundFee) +
+    parseFloat(dataCalculations.storageWarehouseFee) +
+    parseFloat(dataCalculations.pickPackPerOrder) +
+    parseFloat(dataCalculations.materiialsFeePerOrder) +
+    parseFloat(dataCalculations.averageShippingCostPerOrder)
+
   calcTable3pl.innerHTML = `
+        <h2 class='small-table_heading'>3PL price per unit</h2>
         <table class="calcDetailTable">
-        <tr><td>Monthly Account Fee</td><td class="price">${curency}${dataCalculations.monthlyAccountFee}</td></tr>
-        <tr><td>Receiving / Inbound Fee</td><td class="price">${curency}${dataCalculations.receivingInboundFee}</td></tr>
-        <tr><td>Storage / Warehousing Fee</td><td class="price">${curency}${dataCalculations.storageWarehouseFee}</td></tr>
-        <tr><td>Pick & Pack Fee</td><td class="price">${curency}${dataCalculations.pickPackPerOrder}</td></tr>
-        <tr><td>Material Fees</td><td class="price">${curency}${dataCalculations.materiialsFeePerOrder}</td></tr>
-        <tr><td>Shipping Cost</td><td class="price">${curency}${dataCalculations.averageShippingCostPerOrder}</td></tr>
+        <tr><td>Monthly Account Fee</td><td class="price">${lessThan001(
+          dataCalculations.monthlyAccountFee
+        )}</td></tr>
+        <tr><td>Receiving / Inbound Fee</td><td class="price">${lessThan001(
+          dataCalculations.receivingInboundFee
+        )}</td></tr>
+        <tr><td>Storage / Warehousing Fee</td><td class="price">${lessThan001(
+          dataCalculations.storageWarehouseFee
+        )}</td></tr>
+        <tr><td>Pick & Pack Fee</td><td class="price">${lessThan001(
+          dataCalculations.pickPackPerOrder
+        )}</td></tr>
+        <tr><td>Material Fees</td><td class="price">${lessThan001(
+          dataCalculations.materiialsFeePerOrder
+        )}</td></tr>
+        <tr><td>Shipping Cost</td><td class="price">${lessThan001(
+          dataCalculations.averageShippingCostPerOrder
+        )}</td></tr>
+        <tr class="total"><td><strong>Total price per unit</strong></td><td class="price"><strong>${curency}${table3plTotal}</strong></td></tr>
           </table>
         `
 
@@ -476,7 +658,7 @@
   // **************** DISPLAY PORTLESS ****************
 
   document.getElementById('display-portless-percentage').innerHTML =
-    Math.round((dataInputs.costPerUnit / totalPrice) * 100) + '%'
+    Math.round((totalPrice / grandTotalPrice) * 100) + '%'
 
   if (portlessPrice === -1) {
     calcPortlessPrice.style.display = 'none'
@@ -515,5 +697,26 @@
   function daysToMonth(days) {
     // return number of months based on number of days
     return Math.round((days / 30 + Number.EPSILON) * 100) / 100
+  }
+
+  function lessThan001(num) {
+    num = parseFloat(num)
+    // return true if number is less than 0.01
+    if (num < 0.01) {
+      return '< ' + curency + '0.01'
+    } else {
+      return curency + num.toFixed(2)
+    }
+  }
+
+  function percentInGrandTotal(num) {
+    num = parseFloat(num)
+    num = (num / grandTotalPrice) * 100
+    // return true if number is less than 0.01
+    if (num < 0.01) {
+      return '< ' + '0.01' + '%'
+    } else {
+      return num.toFixed(2) + '%'
+    }
   }
 </script>
