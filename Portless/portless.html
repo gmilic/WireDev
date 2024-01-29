@@ -23,17 +23,37 @@
   step05.classList.add('hidden-section')
 
   // **************** FIELDS FOR VALIDATION ***************
-  itemNameFIELD = document.getElementById('ProductName')
-  itemWeightFIELD = document.getElementById('Weight')
-  unitsPerMonthFIELD = document.getElementById('UnitsPerMonth')
-  costPerUnitFIELD = document.getElementById('CostPerUnit')
-  itemWidthFIELD = document.getElementById('Width')
-  itemHeightFIELD = document.getElementById('Height')
-  itemLengthFIELD = document.getElementById('Length')
-  containerSizeFIELD = document.getElementById('ContainerSize')
+  const itemNameFIELD = document.getElementById('ProductName')
+  const itemWeightFIELD = document.getElementById('Weight')
+  const unitsPerMonthFIELD = document.getElementById('UnitsPerMonth')
+  const costPerUnitFIELD = document.getElementById('CostPerUnit')
+  const itemWidthFIELD = document.getElementById('Width')
+  const itemHeightFIELD = document.getElementById('Height')
+  const itemLengthFIELD = document.getElementById('Length')
+  const containerSizeFIELD = document.getElementById('ContainerSize')
+  let currentImportMethodFIELD = 'OceanFreight'
 
   // **************** HS message field ***************
   const messageHS = document.getElementById('calc_message_HS')
+  // **************** Radio buttons ***************
+  const currentImportMethodElement = document.getElementsByName('CurrentMethod')
+  for (let i = 0, length = currentImportMethodElement.length; i < length; i++) {
+    currentImportMethodElement[i].addEventListener('click', function (e) {
+      if (document.getElementById('OceanFreight').checked) {
+        document.getElementById('ocean-group').style.display = 'block'
+        document.getElementById('calc-green-box_ocean-group').style.display =
+          'block'
+        document.getElementById('airFreight-group').style.display = 'none'
+        currentImportMethodFIELD = 'OceanFreight'
+      } else {
+        document.getElementById('ocean-group').style.display = 'none'
+        document.getElementById('calc-green-box_ocean-group').style.display =
+          'none'
+        document.getElementById('airFreight-group').style.display = 'block'
+        currentImportMethodFIELD = 'AirFreight'
+      }
+    })
+  }
   // **************** Buttonss ***************
   const calcStartButton = document.getElementById('CalcStart')
   const calcNext1Button = document.getElementById('CalcNext1')
@@ -68,6 +88,12 @@
   })
   calcNext2Button.addEventListener('click', function (e) {
     e.preventDefault
+    if (currentImportMethodFIELD === 'AirFreight') {
+      step02.classList.add('hidden-section')
+      step03.classList.remove('hidden-section')
+      step03.classList.add('show-section')
+      window.scrollTo(0, 0)
+    }
     if (containerSizeFIELD.reportValidity()) {
       step02.classList.add('hidden-section')
       step03.classList.remove('hidden-section')
@@ -140,24 +166,6 @@
     } else {
     }
   })
-
-  // **************** Radio buttons ***************
-  const currentImportMethodElement = document.getElementsByName('CurrentMethod')
-  for (let i = 0, length = currentImportMethodElement.length; i < length; i++) {
-    currentImportMethodElement[i].addEventListener('click', function (e) {
-      if (document.getElementById('OceanFreight').checked) {
-        document.getElementById('ocean-group').style.display = 'block'
-        document.getElementById('calc-green-box_ocean-group').style.display =
-          'block'
-        document.getElementById('airFreight-group').style.display = 'none'
-      } else {
-        document.getElementById('ocean-group').style.display = 'none'
-        document.getElementById('calc-green-box_ocean-group').style.display =
-          'none'
-        document.getElementById('airFreight-group').style.display = 'block'
-      }
-    })
-  }
 
   // **************** container sizes defaults ****************
   containerSizeElement = document.getElementById('ContainerSize')
