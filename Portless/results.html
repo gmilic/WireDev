@@ -102,16 +102,16 @@
     if (dataInputs.containerSize === 'LCL') {
       containerType = ' units</strong> in an LCL shipment '
       containerDetails =
-        '(assuming the industry average of 55 cubic feets (1.55 cubic meters) per LCL shipment).'
+        '(assuming the industry average of 55 cubic feet (1.55 cubic meters) per LCL shipment).'
       tableRowIndirectCostSpan = 1
     } else if (dataInputs.containerSize === '20FT') {
       containerType = ' units</strong> in a 20 foot container '
       containerDetails =
-        '(assuming the industry standard of 1,170.23 cubic feets container max volume and an <strong>80.1% utilization rate</strong>).'
+        '(assuming the industry standard of 1,170.23 cubic feet container max volume and an <strong>80.1% utilization rate</strong>).'
     } else if (dataInputs.containerSize === '40FT') {
       containerType = ' units</strong> in a 40 foot container '
       containerDetails =
-        '(assuming the industry standard of 2,386.08 cubic feets container max volume and an <strong>80.1% utilization rate</strong>).'
+        '(assuming the industry standard of 2,386.08 cubic feet container max volume and an <strong>80.1% utilization rate</strong>).'
     }
     document.getElementById('display_items-per-container').innerHTML =
       'You can therefore fit: ' +
