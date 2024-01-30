@@ -391,7 +391,7 @@
         <tr><td>Customs / Tariff Fee</td><td class="price">${lessThan001(
           dataCalculations.customsTarifRate
         )}</td></tr>
-        <tr class="total"><td><strong>Total price per unit</strong></td><td class="price"><strong>${curency}${freightTotal}</strong></td></tr>
+        <tr class="total"><td><strong>Total freight cost per unit</strong></td><td class="price"><strong>${curency}${freightTotal}</strong></td></tr>
         </table>
         `
 
@@ -404,7 +404,7 @@
     parseFloat(dataCalculations.averageShippingCostPerOrder)
 
   calcTable3pl.innerHTML = `
-        <h2 class='small-table_heading'>3PL price per unit</h2>
+        <h2 class='small-table_heading'>3PL cost per unit</h2>
         <table class="calcDetailTable">
         <tr><td>Monthly Account Fee</td><td class="price">${lessThan001(
           dataCalculations.monthlyAccountFee
@@ -424,7 +424,7 @@
         <tr><td>Shipping Cost</td><td class="price">${lessThan001(
           dataCalculations.averageShippingCostPerOrder
         )}</td></tr>
-        <tr class="total"><td><strong>Total price per unit</strong></td><td class="price"><strong>${curency}${table3plTotal}</strong></td></tr>
+        <tr class="total"><td><strong>Total 3PL cost per unit</strong></td><td class="price"><strong>${curency}${table3plTotal}</strong></td></tr>
           </table>
         `
 
