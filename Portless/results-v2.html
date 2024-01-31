@@ -24,7 +24,8 @@
     padding: 40px;
     border-radius: 32px;
     box-shadow: 0 14px 50px -4px rgba(0, 0, 0, 0.2);
-    display: inline-block;
+    display: block;
+    overflow-x: auto;
   }
   /* #calc_table-freight,
   #calc_table-3pl {
@@ -46,6 +47,19 @@
   }
   .tableFirstRow td {
     padding: 1rem 4px;
+  }
+  @media (max-width: 768px) {
+    #calc_details-wrap {
+      padding: 40px 10px 40px 10px;
+    }
+    #calc_table-freight,
+    #calc_table-3pl {
+      padding: 40px 10px 40px 10px;
+    }
+    .calcDetailTable td {
+      padding: 4px;
+      min-width: 80px;
+    }
   }
 </style>
 <script>
