@@ -44,12 +44,14 @@ for (let i = 0, length = currentImportMethodElement.length; i < length; i++) {
         'block'
       document.getElementById('airFreight-group').style.display = 'none'
       currentImportMethodFIELD = 'OceanFreight'
+      containerSizeFIELD.required = true
     } else {
       document.getElementById('ocean-group').style.display = 'none'
       document.getElementById('calc-green-box_ocean-group').style.display =
         'none'
       document.getElementById('airFreight-group').style.display = 'block'
       currentImportMethodFIELD = 'AirFreight'
+      containerSizeFIELD.required = false
     }
   })
 }
@@ -59,9 +61,11 @@ const calcNext1Button = document.getElementById('CalcNext1')
 const calcNext2Button = document.getElementById('CalcNext2')
 const calcNext3Button = document.getElementById('CalcNext3')
 const calcNext4Button = document.getElementById('CalcNext4')
+const seeMyResultsButton01 = document.getElementById('see-my-results-01')
+const seeMyResultsButton02 = document.getElementById('see-my-results-02')
 const calcSubmitMainButton = document.getElementById('CalcSubmitMain')
-const calcBack2Button = document.getElementById('CalcBack2')
-const calcBack3Button = document.getElementById('CalcBack3')
+// const calcBack2Button = document.getElementById('CalcBack2')
+// const calcBack3Button = document.getElementById('CalcBack3')
 const calcBack4Button = document.getElementById('CalcBack4')
 const calcBack5Button = document.getElementById('CalcBack5')
 
@@ -106,6 +110,31 @@ calcNext2Button.addEventListener('click', function (e) {
     window.scrollTo(0, 0)
   }
 })
+seeMyResultsButton01.addEventListener('click', function (e) {
+  e.preventDefault
+  if (currentImportMethodFIELD === 'AirFreight') {
+    step02.classList.add('hidden-section')
+    step05.classList.remove('hidden-section')
+    step05.classList.add('show-section')
+    window.scrollTo(0, 0)
+  }
+  if (containerSizeFIELD.reportValidity()) {
+    step02.classList.add('hidden-section')
+    step05.classList.remove('hidden-section')
+    step05.classList.add('show-section')
+    window.scrollTo(0, 0)
+  } else {
+    window.scrollTo(0, 0)
+  }
+})
+seeMyResultsButton02.addEventListener('click', function (e) {
+  e.preventDefault
+  step03.classList.add('hidden-section')
+  step05.classList.remove('hidden-section')
+  step05.classList.add('show-section')
+  window.scrollTo(0, 0)
+})
+
 calcNext3Button.addEventListener('click', function (e) {
   e.preventDefault
   step03.classList.add('hidden-section')
@@ -120,20 +149,20 @@ calcNext4Button.addEventListener('click', function (e) {
   step05.classList.add('show-section')
   window.scrollTo(0, 0)
 })
-calcBack2Button.addEventListener('click', function (e) {
-  e.preventDefault
-  step02.classList.add('hidden-section')
-  step01.classList.remove('hidden-section')
-  step01.classList.add('show-section')
-  window.scrollTo(0, 0)
-})
-calcBack3Button.addEventListener('click', function (e) {
-  e.preventDefault
-  step03.classList.add('hidden-section')
-  step02.classList.remove('hidden-section')
-  step02.classList.add('show-section')
-  window.scrollTo(0, 0)
-})
+// calcBack2Button.addEventListener('click', function (e) {
+//   e.preventDefault
+//   step02.classList.add('hidden-section')
+//   step01.classList.remove('hidden-section')
+//   step01.classList.add('show-section')
+//   window.scrollTo(0, 0)
+// })
+// calcBack3Button.addEventListener('click', function (e) {
+//   e.preventDefault
+//   step03.classList.add('hidden-section')
+//   step02.classList.remove('hidden-section')
+//   step02.classList.add('show-section')
+//   window.scrollTo(0, 0)
+// })
 calcBack4Button.addEventListener('click', function (e) {
   e.preventDefault
   step04.classList.add('hidden-section')
