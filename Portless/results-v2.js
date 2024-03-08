@@ -100,7 +100,9 @@ let finsncingFlowCycle =
   costPerMonthInventory * daysToMonth(dataCalculations.daysUntilPayment)
 document.getElementById('display-financing-flow-cycle').innerHTML =
   finsncingFlowCycle.toLocaleString()
-let averageCostPerUnit = finsncingFlowCycle / dataInputs.unitsPerMonth
+let averageCostPerUnit = roundToTwoDecimalPlaces(
+  finsncingFlowCycle / dataInputs.unitsPerMonth
+)
 document.getElementById('display-financing-per-unit').innerHTML =
   averageCostPerUnit
 
